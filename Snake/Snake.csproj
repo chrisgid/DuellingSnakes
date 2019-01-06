@@ -41,7 +41,12 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Game1.cs" />
+    <Compile Include="CollisionDetector.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="Food.cs" />
+    <Compile Include="GameGrid.cs" />
+    <Compile Include="Snake.cs" />
+    <Compile Include="SnakeGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
