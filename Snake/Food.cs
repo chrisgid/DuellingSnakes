@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Snake
 {
-    class Food
+    class Food : IGameGridObject
     {
         public Food(Vector2 position)
         {
@@ -15,5 +15,6 @@ namespace Snake
         }
 
         public Vector2 Position { get; set; }
+        public IList<Vector2> Positions { get => new List<Vector2> { Position } ; }
     }
 }

@@ -45,10 +45,13 @@
     <Compile Include="Direction.cs" />
     <Compile Include="Food.cs" />
     <Compile Include="GameGrid.cs" />
+    <Compile Include="IGameGridObject.cs" />
     <Compile Include="Snake.cs" />
     <Compile Include="SnakeGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SnakeTextureSet.cs" />
+    <Compile Include="SpriteBatchExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

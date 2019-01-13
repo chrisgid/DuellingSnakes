@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
-using static Snake.Snake;
 
 namespace Snake
 {
@@ -10,24 +9,27 @@ namespace Snake
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D snakeBlockTexture;
+        SnakeTextureSet snakeTextureSet;
         Snake snake;
         Food food;
         GameGrid gameGrid;
         int updateCount = 0;
+        Direction newDirection = Direction.North;
 
         public SnakeGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            gameGrid = new GameGrid(new Vector2(10, 10), 25);
+            gameGrid = new GameGrid(new Vector2(10, 10));
             graphics.PreferredBackBufferWidth = (int)gameGrid.SizeInPixels.X;
             graphics.PreferredBackBufferHeight = (int)gameGrid.SizeInPixels.Y;
             graphics.ApplyChanges();
 
-            snake = new Snake(gameGrid.Middle, Direction.North);
-            food = new Food(gameGrid.GetRandomPosition());
+            snake = new Snake(gameGrid.GridDimensions, gameGrid.Middle, Direction.East);
+            gameGrid.AddGameObject(snake);
+            food = new Food(gameGrid.GetRandomFreePosition());
+            gameGrid.AddGameObject(food);
         }
 
         /// <summary>
@@ -38,17 +40,12 @@ namespace Snake
         /// </summary>
         protected override void Initialize()
         {
-            int gridSquareSize = gameGrid.GridSquareSize;
-            snakeBlockTexture = new Texture2D(GraphicsDevice, gridSquareSize, gridSquareSize);
-            Color[] colorData = new Color[gridSquareSize * gridSquareSize];
-
-            for (int i = 0; i < gridSquareSize * gridSquareSize; i++)
-            {
-                colorData[i] = Color.Black;
-            }
-
-            snakeBlockTexture.SetData(colorData);
-
+            snakeTextureSet = new SnakeTextureSet(GraphicsDevice,
+                                                      gameGrid.GridSquareSizeInPixels,
+                                                      new Color(0, 112, 255),
+                                                      new Color(0, 84, 191),
+                                                      new Color(0, 42, 96),
+                                                      3);
 
             base.Initialize();
         }
@@ -59,10 +56,7 @@ namespace Snake
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -71,46 +65,58 @@ namespace Snake
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                snake.Direction = Direction.North;
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                snake.Direction = Direction.East;
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                snake.Direction = Direction.South;
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                snake.Direction = Direction.West;
-
-            if (updateCount > 5)
+            if (IsActive)
             {
-                updateCount = 0;
+                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    Exit();
+                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                    newDirection = Direction.North;
+                if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                    newDirection = Direction.East;
+                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                    newDirection = Direction.South;
+                if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                    newDirection = Direction.West;
 
-                if (snake.Alive)
+                //DEBUG Force Snake.Eat()
+                if (Keyboard.GetState().IsKeyDown(Keys.E))
+                    snake.Eat();
+                //DEBUG
+
+                if (updateCount > 5)
                 {
-                    
-                    if (snake.HeadPosition == food.Position)
-                    {
-                        snake.UpdatePosition(true);
-                        do
-                        {
-                            food.Position = gameGrid.GetRandomPosition();
-                        } while (snake.Positions.Contains(food.Position));
-                    }
-                    else
-                    {
-                        snake.UpdatePosition();
-                    }
-                }
-            }
+                    updateCount = 0;
 
-            base.Update(gameTime);
-            updateCount += 1;
+                    if (snake.Alive)
+                    {
+                        snake.ChangeDirection(newDirection);
+
+                        if (snake.HeadPosition == food.Position)
+                        {
+                            snake.Eat().UpdatePosition();
+
+                            do
+                            {
+                                food.Position = gameGrid.GetRandomFreePosition();
+                            } while (snake.Positions.Contains(food.Position));
+                        }
+                        else
+                        {
+                            snake.UpdatePosition();
+                        }
+                    }
+
+
+                }
+
+                base.Update(gameTime);
+                updateCount += 1;
+            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -118,26 +124,11 @@ namespace Snake
             GraphicsDevice.Clear(Color.LightGray);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(snakeBlockTexture, GetDrawPosition(food.Position), Color.White);
-
-            foreach (Vector2 position in snake.Positions)
-            {
-                Vector2 drawPosition = GetDrawPosition(position);
-                spriteBatch.Draw(snakeBlockTexture, drawPosition, Color.White);
-            }
-
+            spriteBatch.Draw(food, snakeTextureSet.SnakeSquare, gameGrid);
+            spriteBatch.Draw(snake, snakeTextureSet, gameGrid);
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        private Vector2 GetDrawPosition(Vector2 snakeSectionPosition)
-        {
-            return new Vector2
-            {
-                X = snakeSectionPosition.X * gameGrid.GridSquareSize,
-                Y = snakeSectionPosition.Y * gameGrid.GridSquareSize,
-            };
         }
     }
 }
