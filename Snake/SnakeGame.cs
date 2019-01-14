@@ -21,7 +21,7 @@ namespace Snake
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            gameGrid = new GameGrid(new Vector2(10, 10));
+            gameGrid = new GameGrid(new Vector2(30, 20));
             graphics.PreferredBackBufferWidth = (int)gameGrid.SizeInPixels.X;
             graphics.PreferredBackBufferHeight = (int)gameGrid.SizeInPixels.Y;
             graphics.ApplyChanges();
@@ -40,12 +40,7 @@ namespace Snake
         /// </summary>
         protected override void Initialize()
         {
-            snakeTextureSet = new SnakeTextureSet(GraphicsDevice,
-                                                      gameGrid.GridSquareSizeInPixels,
-                                                      new Color(0, 112, 255),
-                                                      new Color(0, 84, 191),
-                                                      new Color(0, 42, 96),
-                                                      3);
+            snakeTextureSet = new SnakeTextureSet(GraphicsDevice, gameGrid.GridSquareSizeInPixels, Color.LimeGreen);
 
             base.Initialize();
         }
@@ -124,7 +119,7 @@ namespace Snake
             GraphicsDevice.Clear(Color.LightGray);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(food, snakeTextureSet.SnakeSquare, gameGrid);
+            spriteBatch.Draw(food, snakeTextureSet.Square, gameGrid);
             spriteBatch.Draw(snake, snakeTextureSet, gameGrid);
             spriteBatch.End();
 
