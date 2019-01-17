@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Snake
+namespace SnakeGame
 {
 #if WINDOWS || LINUX
     /// <summary>

@@ -4,23 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using SnakeGame.GameObjects;
+using SnakeGame.Models;
 
-namespace Snake
+namespace SnakeGame
 {
-    class GameGrid // Make this a static class? A game will only ever have one game grid
+    static class GameGrid // Make this a static class? A game will only ever have one game grid
     {
-        private readonly int _gridSquareSizeInPixels = 30;
-        private List<IGameGridObject> _gameGridObjects;
+        private static readonly int _gridSquareSizeInPixels = 30;
+        private static List<IGameObject> _gameObjects = new List<IGameObject>();
+        private static Vector2 _gridDimensions = new Vector2(30, 20);
 
-        public GameGrid(Vector2 gridDimensions)
-        {
-            GridDimensions = gridDimensions;
-            _gameGridObjects = new List<IGameGridObject>();
-        }
-
-        public Vector2 GridDimensions { get; }
-        public int GridSquareSizeInPixels { get => _gridSquareSizeInPixels; }
-        public Vector2 SizeInPixels
+        public static List<IGameObject> GameObjects { get => _gameObjects; }
+        public static Vector2 GridDimensions { get => _gridDimensions; }
+        public static int GridSquareSizeInPixels { get => _gridSquareSizeInPixels; }
+        public static Vector2 SizeInPixels
         {
             get => new Vector2
             {
@@ -28,7 +26,7 @@ namespace Snake
                 Y = (int)GridDimensions.Y * GridSquareSizeInPixels
             };
         }
-        public Vector2 Middle
+        public static Vector2 Middle
         {
             get => new Vector2
             {
@@ -37,16 +35,21 @@ namespace Snake
             };
         }
 
-        public Vector2 GetWrappedPosition(Vector2 position)
+        public static Vector2 GetWrappedPosition(Vector2 position)
         {
             return new Vector2
             {
-                X = position.X % GridDimensions.X,
-                Y = position.Y % GridDimensions.Y
+                X = (position.X + GridDimensions.X) % GridDimensions.X,
+                Y = (position.Y + GridDimensions.Y) % GridDimensions.Y
             };
         }
 
-        public Vector2 GetRandomFreePosition()
+        public static Vector2 GetWrappedPosition(int x, int y)
+        {
+            return GetWrappedPosition(new Vector2 { X = x, Y = y });
+        }
+
+        public static Vector2 GetRandomFreePosition()
         {
             Random random = new Random();
             Vector2 randomPosition;
@@ -63,7 +66,7 @@ namespace Snake
             return randomPosition;
         }
 
-        public Direction CalcDirectionBetweenAdjacent(Vector2 startPosition, Vector2 endPosition)
+        public static Direction CalcDirectionBetweenAdjacent(Vector2 startPosition, Vector2 endPosition)
         {
             Direction direction = Direction.North;
 
@@ -108,16 +111,16 @@ namespace Snake
             return direction;
         }
 
-        public void AddGameObject(IGameGridObject gameGridObject)
+        public static void AddGameObject(IGameObject gameGridObject)
         {
-            _gameGridObjects.Add(gameGridObject);
+            _gameObjects.Add(gameGridObject);
         }
 
-        private List<Vector2> GetOccupiedPositions()
+        private static List<Vector2> GetOccupiedPositions()
         {
             List<Vector2> occupiedPositions = new List<Vector2>();
 
-            foreach (IGameGridObject gameGridObject in _gameGridObjects)
+            foreach (IGameObject gameGridObject in _gameObjects)
             {
                 occupiedPositions.AddRange(gameGridObject.Positions);
             }

@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snake
+namespace SnakeGame.GameObjects
 {
-    interface IGameGridObject
+    interface IGameObject
     {
         IList<Vector2> Positions { get; }
+        Type Type { get; }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Linq;
+using SnakeGame.Models;
+using SnakeGame.Textures;
+using SnakeGame.GameObjects;
 
-namespace Snake
+namespace SnakeGame
 {
     public class SnakeGame : Game
     {
@@ -12,24 +14,19 @@ namespace Snake
         SnakeTextureSet snakeTextureSet;
         Snake snake;
         Food food;
-        GameGrid gameGrid;
         int updateCount = 0;
         Direction newDirection = Direction.North;
+        Player playerOne;
 
         public SnakeGame()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = (int)GameGrid.SizeInPixels.X,
+                PreferredBackBufferHeight = (int)GameGrid.SizeInPixels.Y
+            };
+
             Content.RootDirectory = "Content";
-
-            gameGrid = new GameGrid(new Vector2(30, 20));
-            graphics.PreferredBackBufferWidth = (int)gameGrid.SizeInPixels.X;
-            graphics.PreferredBackBufferHeight = (int)gameGrid.SizeInPixels.Y;
-            graphics.ApplyChanges();
-
-            snake = new Snake(gameGrid.GridDimensions, gameGrid.Middle, Direction.East);
-            gameGrid.AddGameObject(snake);
-            food = new Food(gameGrid.GetRandomFreePosition());
-            gameGrid.AddGameObject(food);
         }
 
         /// <summary>
@@ -40,7 +37,7 @@ namespace Snake
         /// </summary>
         protected override void Initialize()
         {
-            snakeTextureSet = new SnakeTextureSet(GraphicsDevice, gameGrid.GridSquareSizeInPixels, Color.LimeGreen);
+            snakeTextureSet = new SnakeTextureSet(GraphicsDevice, GameGrid.GridSquareSizeInPixels, Color.LimeGreen);
 
             base.Initialize();
         }
@@ -52,6 +49,27 @@ namespace Snake
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+
+            Input playerOneInput = new Input
+            {
+                North = Keys.Up,
+                East = Keys.Right,
+                South = Keys.Down,
+                West = Keys.Left
+            };
+
+            Snake playerOneSnake = new Snake(GameGrid.Middle, Direction.North);
+
+            playerOne = new Player(playerOneInput, playerOneSnake, Color.LimeGreen);
+
+
+
+
+            snake = new Snake(GameGrid.Middle, Direction.North);
+            GameGrid.AddGameObject(snake);
+            food = new Food(GameGrid.GetRandomFreePosition());
+            GameGrid.AddGameObject(food);
         }
 
         /// <summary>
@@ -93,19 +111,18 @@ namespace Snake
 
                         if (snake.HeadPosition == food.Position)
                         {
-                            snake.Eat().UpdatePosition();
+                            snake.Update();
 
                             do
                             {
-                                food.Position = gameGrid.GetRandomFreePosition();
+                                food.Position = GameGrid.GetRandomFreePosition();
                             } while (snake.Positions.Contains(food.Position));
                         }
                         else
                         {
-                            snake.UpdatePosition();
+                            snake.Update();
                         }
                     }
-
 
                 }
 
@@ -119,8 +136,8 @@ namespace Snake
             GraphicsDevice.Clear(Color.LightGray);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(food, snakeTextureSet.Square, gameGrid);
-            spriteBatch.Draw(snake, snakeTextureSet, gameGrid);
+            spriteBatch.Draw(food, snakeTextureSet.Square);
+            spriteBatch.Draw(snake, snakeTextureSet);
             spriteBatch.End();
 
             base.Draw(gameTime);

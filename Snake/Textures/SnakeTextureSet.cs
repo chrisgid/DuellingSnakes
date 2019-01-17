@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snake
+namespace SnakeGame.Textures
 {
     public class SnakeTextureSet
     {
@@ -24,7 +24,6 @@ namespace Snake
         private Texture2D _middleStraight;
         private Texture2D _middleCorner;
         private Texture2D _square;
-
 
         public SnakeTextureSet(GraphicsDevice graphicsDevice, int sizeInPixels, Color mainColor)
         {

@@ -1,24 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using SnakeGame.Models;
 
-namespace Snake
+namespace SnakeGame.GameObjects
 {
-    class Snake : IGameGridObject
+    public class Snake : IGameObject
     {
         private bool _alive = true;
         private int _defaultLength = 3;
         private bool _justEaten = false;
-        private Direction _direction;
         private List<Vector2> _postitions = new List<Vector2>();
-        private Vector2 _gridDimensions;
+        private Vector2 _gridDimensions = GameGrid.GridDimensions;
+        private Direction _direction;
 
-        public Snake(
-            Vector2 gridDimensions,
-            Vector2 initialPosition,
-            Direction initialDirection = Direction.North)
+        public Snake(Vector2 initialPosition, Direction initialDirection = Direction.North)
         {
-            _gridDimensions = gridDimensions;
             _postitions.Add(initialPosition);
             _direction = initialDirection;
             AddDefaultTailPositions();
@@ -29,6 +27,9 @@ namespace Snake
         public IList<Vector2> Positions { get => _postitions; }
         public Direction Direction { get => _direction; }
         public int Length { get => _postitions.Count(); }
+        public Type Type { get => typeof(Snake); }
+
+        private Vector2 DirectionVector { get => Direction.ToVector2(); }
 
         public Snake Eat()
         {
@@ -38,28 +39,41 @@ namespace Snake
             return this;
         }
 
-        public void UpdatePosition()
+        public void Update()
         {
             if (Alive)
             {
-                int headPositionX = (int)HeadPosition.X;
-                int headPositionY = (int)HeadPosition.Y;
+                int headPositionX = (int)HeadPosition.X + (int)DirectionVector.X;
+                int headPositionY = (int)HeadPosition.Y + (int)DirectionVector.Y;
 
-                ModifyPositionBasedOnDirection(ref headPositionX, ref headPositionY, positive: true);
+                Vector2 newHeadPosition = GameGrid.GetWrappedPosition(headPositionX, headPositionY);
 
-                // Wrap X Axis
-                if (headPositionX > _gridDimensions.X - 1)
-                    headPositionX = 0;
-                else if (headPositionX < 0)
-                    headPositionX = (int)_gridDimensions.X - 1;
-                // Wrap Y Axis
-                if (headPositionY > _gridDimensions.Y - 1)
-                    headPositionY = 0;
-                else if (headPositionY < 0)
-                    headPositionY = (int)_gridDimensions.Y - 1;
+                // Calculate new positions,
+                // check if new positions collide with anything,
+                // 
 
+                // New collision detection here
+                foreach (IGameObject gameObject in GameGrid.GameObjects)
+                {
+                    if (gameObject.Positions.Contains(newHeadPosition))
+                    {
+                        if (gameObject.Type == typeof(Food))
+                        {
+                            Eat();
+                        }
+                        //else if (gameObject.Type == typeof(Wall))
+                        //{
+                        //    Kill();
+                        //}
+                        //else if (gameObject.Type == typeof(Snake) && gameObject != this)
+                        //{
+                        //    Kill();
+                        //}
+                    }
+                }
+                // New collision detection here
 
-                _postitions.Insert(0, new Vector2(headPositionX, headPositionY));
+                _postitions.Insert(0, newHeadPosition);
 
                 Vector2 lastTailPosition = new Vector2(-1, -1);
 
@@ -93,7 +107,7 @@ namespace Snake
 
         public void ChangeDirection(Direction newDirection)
         {
-            if (!newDirection.IsOpposite(Direction))
+            if (!newDirection.IsOpposite(Direction) && Alive)
             {
                 _direction = newDirection;
             }
@@ -101,10 +115,8 @@ namespace Snake
 
         private void AddDefaultTailPositions()
         {
-            int xModifier = 0;
-            int yModifier = 0;
-
-            ModifyPositionBasedOnDirection(ref xModifier, ref yModifier, positive: false);
+            int xModifier = (int)DirectionVector.X * -1;
+            int yModifier = (int)DirectionVector.Y * -1;
 
             for (int i = 1; i < _defaultLength; i++)
             {
@@ -113,32 +125,6 @@ namespace Snake
                     X = HeadPosition.X + (xModifier * i),
                     Y = HeadPosition.Y + (yModifier * i)
                 });
-            }
-        }
-
-        private void ModifyPositionBasedOnDirection(ref int x, ref int y, bool positive)
-        {
-            int modifier;
-
-            if (positive)
-                modifier = 1;
-            else
-                modifier = -1;
-
-            switch (Direction)
-            {
-                case Direction.North:
-                    y -= modifier;
-                    break;
-                case Direction.East:
-                    x += modifier;
-                    break;
-                case Direction.South:
-                    y += modifier;
-                    break;
-                case Direction.West:
-                    x -= modifier;
-                    break;
             }
         }
     }

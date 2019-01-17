@@ -9,7 +9,7 @@
     <ProjectGuid>{CC8A543D-3ABE-406B-8655-44ED88A5B2F0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Snake</RootNamespace>
+    <RootNamespace>SnakeGame</RootNamespace>
     <AssemblyName>Snake</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
@@ -41,16 +41,17 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CollisionDetector.cs" />
-    <Compile Include="Direction.cs" />
-    <Compile Include="Food.cs" />
+    <Compile Include="Models\Direction.cs" />
+    <Compile Include="GameObjects\Food.cs" />
     <Compile Include="GameGrid.cs" />
-    <Compile Include="IGameGridObject.cs" />
-    <Compile Include="Snake.cs" />
+    <Compile Include="GameObjects\IGameObject.cs" />
+    <Compile Include="Models\Keys.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="GameObjects\Snake.cs" />
     <Compile Include="SnakeGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SnakeTextureSet.cs" />
+    <Compile Include="Textures\SnakeTextureSet.cs" />
     <Compile Include="SpriteBatchExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
