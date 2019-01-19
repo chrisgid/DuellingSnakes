@@ -7,15 +7,15 @@ using Microsoft.Xna.Framework;
 
 namespace SnakeGame.GameObjects
 {
-    class Food : IGameObject
+    class Wall : IGameObject
     {
-        public Food(Vector2 position)
+        public Wall(Vector2 position)
         {
             Position = position;
         }
 
         public Vector2 Position { get; set; }
         public IList<Vector2> Positions { get => new List<Vector2> { Position }; }
-        public Type Type { get => typeof(Food); }
+        public Type Type { get => typeof(Wall); }
     }
 }
