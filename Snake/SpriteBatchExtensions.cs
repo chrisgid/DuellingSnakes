@@ -37,28 +37,28 @@ namespace SnakeGame
                     switch (direction)
                     {
                         case Direction.North:
-                            rotation = DegreesToRadians(0 + modifier);
+                            rotation = DegreesToRadians.Calculate(0 + modifier);
                             break;
                         case Direction.East:
-                            rotation = DegreesToRadians(90 + modifier);
+                            rotation = DegreesToRadians.Calculate(90 + modifier);
                             break;
                         case Direction.South:
-                            rotation = DegreesToRadians(180 + modifier);
+                            rotation = DegreesToRadians.Calculate(180 + modifier);
                             break;
                         case Direction.West:
-                            rotation = DegreesToRadians(270 + modifier);
+                            rotation = DegreesToRadians.Calculate(270 + modifier);
                             break;
                     }
 
 
                     if (isHead)
                     {
-                        Vector2 drawPosition = GetDrawPosition(snakeTextureSet.Head, position, GameGrid.GridSquareSizeInPixels);
+                        Vector2 drawPosition = GameGrid.GetDrawPosition(snakeTextureSet.Head, position);
                         spriteBatch.Draw(snakeTextureSet.Head, drawPosition, null, Color.White, rotation, snakeTextureSet.Head.Bounds.Center.ToVector2(), 1, SpriteEffects.None, 0);
                     }
                     else
                     {
-                        Vector2 drawPosition = GetDrawPosition(snakeTextureSet.Tail, position, GameGrid.GridSquareSizeInPixels);
+                        Vector2 drawPosition = GameGrid.GetDrawPosition(snakeTextureSet.Tail, position);
                         spriteBatch.Draw(snakeTextureSet.Tail, drawPosition, null, Color.White, rotation, snakeTextureSet.Tail.Bounds.Center.ToVector2(), 1, SpriteEffects.None, 0);
                     }
                 }
@@ -72,25 +72,25 @@ namespace SnakeGame
                     if (directionNext.IsOpposite(directionPrev))
                     {
                         if (directionNext == Direction.North || directionNext == Direction.South)
-                            rotation = DegreesToRadians(0);
+                            rotation = DegreesToRadians.Calculate(0);
                         else if (directionNext == Direction.East || directionNext == Direction.West)
-                            rotation = DegreesToRadians(90);
+                            rotation = DegreesToRadians.Calculate(90);
 
-                        Vector2 drawPosition = GetDrawPosition(snakeTextureSet.MiddleStraight, position, GameGrid.GridSquareSizeInPixels);
+                        Vector2 drawPosition = GameGrid.GetDrawPosition(snakeTextureSet.MiddleStraight, position);
                         spriteBatch.Draw(snakeTextureSet.MiddleStraight, drawPosition, null, Color.White, rotation, snakeTextureSet.MiddleStraight.Bounds.Center.ToVector2(), 1, SpriteEffects.None, 0);
                     }
                     else
                     {
                         if ((directionNext == Direction.East && directionPrev == Direction.South) || (directionNext == Direction.South && directionPrev == Direction.East))
-                            rotation = DegreesToRadians(0);
+                            rotation = DegreesToRadians.Calculate(0);
                         else if ((directionNext == Direction.South && directionPrev == Direction.West) || (directionNext == Direction.West && directionPrev == Direction.South))
-                            rotation = DegreesToRadians(90);
+                            rotation = DegreesToRadians.Calculate(90);
                         else if ((directionNext == Direction.West && directionPrev ==Direction.North) || (directionNext == Direction.North && directionPrev == Direction.West))
-                            rotation = DegreesToRadians(180);
+                            rotation = DegreesToRadians.Calculate(180);
                         else if ((directionNext == Direction.North && directionPrev == Direction.East) || (directionNext == Direction.East && directionPrev == Direction.North))
-                            rotation = DegreesToRadians(270);
+                            rotation = DegreesToRadians.Calculate(270);
 
-                        Vector2 drawPosition = GetDrawPosition(snakeTextureSet.MiddleCorner, position, GameGrid.GridSquareSizeInPixels);
+                        Vector2 drawPosition = GameGrid.GetDrawPosition(snakeTextureSet.MiddleCorner, position);
                         spriteBatch.Draw(snakeTextureSet.MiddleCorner, drawPosition, null, Color.White, rotation, snakeTextureSet.MiddleCorner.Bounds.Center.ToVector2(), 1, SpriteEffects.None, 0);
                     }
                 }
@@ -108,20 +108,6 @@ namespace SnakeGame
             spriteBatch.Draw(texture, drawPosition, Color.White);
         }
 
-        private static Vector2 GetDrawPosition(Texture2D texture, Vector2 gameGridPosition, int gameGridSquareSizeInPixels)
-        {
-            Vector2 middle = texture.Bounds.Center.ToVector2();
-
-            return new Vector2
-            {
-                X = (gameGridPosition.X * gameGridSquareSizeInPixels) + middle.X,
-                Y = (gameGridPosition.Y * gameGridSquareSizeInPixels) + middle.Y,
-            };
-        }
-
-        private static float DegreesToRadians(int degrees)
-        {
-            return (float)(Math.PI / 180) * degrees;
-        }
+        
     }
 }

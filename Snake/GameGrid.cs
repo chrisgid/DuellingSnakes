@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SnakeGame.GameObjects;
 using SnakeGame.Models;
 
@@ -114,6 +115,17 @@ namespace SnakeGame
         public static void AddGameObject(IGameObject gameGridObject)
         {
             _gameObjects.Add(gameGridObject);
+        }
+
+        public static Vector2 GetDrawPosition(Texture2D texture, Vector2 gameGridPosition)
+        {
+            Vector2 middle = texture.Bounds.Center.ToVector2();
+
+            return new Vector2
+            {
+                X = (gameGridPosition.X * _gridSquareSizeInPixels) + middle.X,
+                Y = (gameGridPosition.Y * _gridSquareSizeInPixels) + middle.Y,
+            };
         }
 
         private static List<Vector2> GetOccupiedPositions()

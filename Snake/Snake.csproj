@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DegreesToRadians.cs" />
     <Compile Include="GameObjects\Wall.cs" />
     <Compile Include="Models\Direction.cs" />
     <Compile Include="GameObjects\Food.cs" />
