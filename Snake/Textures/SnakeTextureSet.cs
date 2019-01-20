@@ -41,13 +41,13 @@ namespace SnakeGame.Textures
         public Texture2D MiddleCorner => _middleCorner;
         public Texture2D Square => _square;
 
-        private Texture2D DefaultTexture => new Texture2D(_graphicsDevice, _sizeInPixels, _sizeInPixels);
+        private Texture2D EmptyTexture => new Texture2D(_graphicsDevice, _sizeInPixels, _sizeInPixels);
 
         private Texture2D GetSnakeHeadTail(bool isHead)
         {
             Color color = isHead ? _headColor : _mainColor;
             Color[] colorData = ColorDataCreator.CreateColorData(color, _borderColor, _sizeInPixels, borderTop: true, borderLeft: true, borderRight: true);
-            Texture2D texture = DefaultTexture;
+            Texture2D texture = EmptyTexture;
             texture.SetData(colorData);
             return texture;
         }
@@ -55,7 +55,7 @@ namespace SnakeGame.Textures
         private Texture2D GetMiddleStraight()
         {
             Color[] colorData = ColorDataCreator.CreateColorData(_mainColor, _borderColor, _sizeInPixels, borderLeft: true, borderRight: true);
-            Texture2D texture = DefaultTexture;
+            Texture2D texture = EmptyTexture;
             texture.SetData(colorData);
             return texture;
         }
@@ -64,7 +64,7 @@ namespace SnakeGame.Textures
         {
             Color[] colorData = ColorDataCreator.CreateColorData(_mainColor, _borderColor, _sizeInPixels, borderTop: true, borderLeft: true);
             colorData.AddCornerBorder(_borderColor, _sizeInPixels, bottomRight: true);
-            Texture2D texture = DefaultTexture;
+            Texture2D texture = EmptyTexture;
             texture.SetData(colorData);
             return texture;
         }
@@ -72,7 +72,7 @@ namespace SnakeGame.Textures
         private Texture2D GetSquare()
         {
             Color[] colorData = ColorDataCreator.CreateColorData(_mainColor, _borderColor, _sizeInPixels, true, true, true, true);
-            Texture2D texture = DefaultTexture;
+            Texture2D texture = EmptyTexture;
             texture.SetData(colorData);
             return texture;
         }

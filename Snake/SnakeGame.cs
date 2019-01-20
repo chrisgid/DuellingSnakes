@@ -12,8 +12,10 @@ namespace SnakeGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SnakeTextureSet snakeTextureSet;
+        WallTextureSet wallTextureSet;
         Snake snake;
         Food food;
+        Wall wall;
         int updateCount = 0;
         Direction newDirection = Direction.North;
         Player playerOne;
@@ -37,8 +39,6 @@ namespace SnakeGame
         /// </summary>
         protected override void Initialize()
         {
-            snakeTextureSet = new SnakeTextureSet(GraphicsDevice, GameGrid.GridSquareSizeInPixels, Color.LimeGreen);
-
             base.Initialize();
         }
 
@@ -51,24 +51,42 @@ namespace SnakeGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
-            Input playerOneInput = new Input
-            {
-                North = Keys.Up,
-                East = Keys.Right,
-                South = Keys.Down,
-                West = Keys.Left
-            };
+            //Input playerOneInput = new Input
+            //{
+            //    North = Keys.Up,
+            //    East = Keys.Right,
+            //    South = Keys.Down,
+            //    West = Keys.Left
+            //};
 
-            Snake playerOneSnake = new Snake(GameGrid.Middle, Direction.North);
+            //Snake playerOneSnake = new Snake(GameGrid.Middle, Direction.North);
 
-            playerOne = new Player(playerOneInput, playerOneSnake, Color.LimeGreen);
-
-
+            //playerOne = new Player(playerOneInput, playerOneSnake, Color.LimeGreen);
 
 
-            snake = new Snake(GameGrid.Middle, Direction.North);
+            snakeTextureSet = new SnakeTextureSet(GraphicsDevice, GameGrid.GridSquareSizeInPixels, Color.LimeGreen);
+            wallTextureSet = new WallTextureSet(GraphicsDevice, GameGrid.GridSquareSizeInPixels, Color.SandyBrown);
+
+            snake = new Snake(snakeTextureSet, GameGrid.Middle, Direction.North);
             GameGrid.AddGameObject(snake);
-            food = new Food(GameGrid.GetRandomFreePosition());
+
+            
+
+            wall = new Wall(wallTextureSet);
+            GameGrid.AddGameObject(wall);
+
+            for (int x = 0; x < GameGrid.GridDimensions.X; x++)
+            {
+                for (int y = 0; y < GameGrid.GridDimensions.Y; y++)
+                {
+                    if (x == 0 || y == 0 || x == GameGrid.GridDimensions.X - 1 || y == GameGrid.GridDimensions.Y - 1)
+                    {
+                        wall.AddSection(new Vector2(x, y));
+                    }
+                }
+            }
+
+            food = new Food(GameGrid.GetRandomFreePosition(), snakeTextureSet.Square);
             GameGrid.AddGameObject(food);
         }
 
@@ -136,8 +154,9 @@ namespace SnakeGame
             GraphicsDevice.Clear(Color.LightGray);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(food, snakeTextureSet.Square);
-            spriteBatch.Draw(snake, snakeTextureSet);
+            food.Draw(spriteBatch);
+            snake.Draw(spriteBatch);
+            wall.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

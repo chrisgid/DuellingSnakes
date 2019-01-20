@@ -55,7 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Textures\ColorDataCreator.cs" />
     <Compile Include="Textures\SnakeTextureSet.cs" />
-    <Compile Include="SpriteBatchExtensions.cs" />
     <Compile Include="Textures\WallTextureSet.cs" />
   </ItemGroup>
   <ItemGroup>
