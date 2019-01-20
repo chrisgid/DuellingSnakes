@@ -22,6 +22,17 @@ namespace SnakeGame.GameObjects
         public IList<Vector2> Positions { get => new List<Vector2> { Position }; }
         public Type Type { get => typeof(Food); }
 
+        public void Update()
+        {
+            foreach (IGameObject gameObject in GameGrid.GameObjects)
+            {
+                if (gameObject.Positions.Contains(Position) && gameObject != this)
+                {
+                    Position = GameGrid.GetRandomFreePosition();
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 drawPosition = new Vector2

@@ -19,7 +19,6 @@ namespace SnakeGame.Textures
         private Texture2D _tail;
         private Texture2D _middleStraight;
         private Texture2D _middleCorner;
-        private Texture2D _square;
 
         public SnakeTextureSet(GraphicsDevice graphicsDevice, int sizeInPixels, Color color)
         {
@@ -32,14 +31,12 @@ namespace SnakeGame.Textures
             _tail = GetSnakeHeadTail(false);
             _middleStraight = GetMiddleStraight();
             _middleCorner = GetMiddleCorner();
-            _square = GetSquare();
         }
 
         public Texture2D Head => _head;
         public Texture2D Tail => _tail;
         public Texture2D MiddleStraight => _middleStraight;
         public Texture2D MiddleCorner => _middleCorner;
-        public Texture2D Square => _square;
 
         private Texture2D EmptyTexture => new Texture2D(_graphicsDevice, _sizeInPixels, _sizeInPixels);
 
@@ -64,14 +61,6 @@ namespace SnakeGame.Textures
         {
             Color[] colorData = ColorDataCreator.CreateColorData(_mainColor, _borderColor, _sizeInPixels, borderTop: true, borderLeft: true);
             colorData.AddCornerBorder(_borderColor, _sizeInPixels, bottomRight: true);
-            Texture2D texture = EmptyTexture;
-            texture.SetData(colorData);
-            return texture;
-        }
-
-        private Texture2D GetSquare()
-        {
-            Color[] colorData = ColorDataCreator.CreateColorData(_mainColor, _borderColor, _sizeInPixels, true, true, true, true);
             Texture2D texture = EmptyTexture;
             texture.SetData(colorData);
             return texture;

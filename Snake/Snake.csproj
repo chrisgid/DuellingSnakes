@@ -54,6 +54,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Textures\ColorDataCreator.cs" />
+    <Compile Include="Textures\FoodTexture.cs" />
     <Compile Include="Textures\SnakeTextureSet.cs" />
     <Compile Include="Textures\WallTextureSet.cs" />
   </ItemGroup>

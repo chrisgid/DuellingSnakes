@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SnakeGame.GameObjects;
 using SnakeGame.Models;
@@ -18,10 +19,10 @@ namespace SnakeGame
         public Snake Snake { get; }
         public Color Color { get; }
 
-        public Player(Input input, Snake snake, Color color)
+        public Player(Input input, Color color, GraphicsDevice graphicsDevice)
         {
             Input = input;
-            Snake = snake;
+            Snake = new Snake(graphicsDevice, color, GameGrid.Middle, Direction.North);
             Color = color;
         }
 
@@ -44,6 +45,11 @@ namespace SnakeGame
 
             if (Keyboard.GetState().IsKeyDown(Input.West))
                 direction = Direction.West;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            Snake.Draw(spriteBatch);
         }
     }
 }

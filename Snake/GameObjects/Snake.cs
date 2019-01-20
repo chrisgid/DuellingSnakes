@@ -18,9 +18,9 @@ namespace SnakeGame.GameObjects
         private Direction _direction;
         private SnakeTextureSet _textureSet;
 
-        public Snake(SnakeTextureSet textureSet, Vector2 initialPosition, Direction initialDirection = Direction.North)
+        public Snake(GraphicsDevice graphicsDevice, Color color, Vector2 initialPosition, Direction initialDirection = Direction.North)
         {
-            _textureSet = textureSet;
+            _textureSet = new SnakeTextureSet(graphicsDevice, GameGrid.GridSquareSizeInPixels, color);
             _postitions.Add(initialPosition);
             _direction = initialDirection;
             AddDefaultTailPositions();
@@ -52,11 +52,6 @@ namespace SnakeGame.GameObjects
 
                 Vector2 newHeadPosition = GameGrid.GetWrappedPosition(headPositionX, headPositionY);
 
-                // Calculate new positions,
-                // check if new positions collide with anything,
-                // 
-
-                // New collision detection here
                 foreach (IGameObject gameObject in GameGrid.GameObjects)
                 {
                     if (gameObject.Positions.Contains(newHeadPosition))
@@ -69,37 +64,41 @@ namespace SnakeGame.GameObjects
                         {
                             Kill();
                         }
-                        //else if (gameObject.Type == typeof(Snake) && gameObject != this)
-                        //{
-                        //    Kill();
-                        //}
+                        else if (gameObject.Type == typeof(Snake) && gameObject != this)
+                        {
+                            Kill();
+                        }
                     }
                 }
-                // New collision detection here
 
-                _postitions.Insert(0, newHeadPosition);
-
-                Vector2 lastTailPosition = new Vector2(-1, -1);
-
-                if (_justEaten)
+                // Detect collision with self
+                if (Alive)
                 {
-                    _justEaten = false;
-                }
-                else
-                {
-                    lastTailPosition = _postitions[_postitions.Count() - 1];
-                    _postitions.RemoveAt(_postitions.Count() - 1);
-                }
-
-                if (_postitions.Count != _postitions.Distinct().Count())
-                {
-                    if (lastTailPosition != new Vector2(-1, -1))
+                    if (_justEaten)
                     {
-                        _postitions.Add(lastTailPosition);
-                    }
+                        _justEaten = false;
 
-                    _postitions.RemoveAt(0);
-                    Kill();
+                        if (_postitions.Contains(newHeadPosition))
+                        {
+                            Kill();
+                        }
+                    }
+                    else
+                    {
+                        if (_postitions.GetRange(0, _postitions.Count - 1).Contains(newHeadPosition))
+                        {
+                            Kill();
+                        }
+                        else
+                        {
+                            _postitions.RemoveAt(_postitions.Count - 1);
+                        }
+                    }
+                }
+
+                if (Alive)
+                {
+                    _postitions.Insert(0, newHeadPosition);
                 }
             }
         }
@@ -134,6 +133,8 @@ namespace SnakeGame.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            // Please don't judge
+
             for (int i = 0; i < this.Positions.Count; i++)
             {
                 Vector2 position = this.Positions[i];
