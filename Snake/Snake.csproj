@@ -47,6 +47,7 @@
     <Compile Include="GameObjects\Food.cs" />
     <Compile Include="GameGrid.cs" />
     <Compile Include="GameObjects\IGameObject.cs" />
+    <Compile Include="Models\GameMode.cs" />
     <Compile Include="Models\Keys.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="GameObjects\Snake.cs" />

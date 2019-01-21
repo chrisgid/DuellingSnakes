@@ -19,10 +19,10 @@ namespace SnakeGame
         public Snake Snake { get; }
         public Color Color { get; }
 
-        public Player(Input input, Color color, GraphicsDevice graphicsDevice)
+        public Player(Input input, Color color, GraphicsDevice graphicsDevice, Vector2 startPosition)
         {
             Input = input;
-            Snake = new Snake(graphicsDevice, color, GameGrid.Middle, Direction.North);
+            Snake = new Snake(graphicsDevice, color, startPosition, Direction.North);
             Color = color;
         }
 

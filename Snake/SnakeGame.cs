@@ -14,6 +14,7 @@ namespace SnakeGame
         int updateCount = 0;
 
         Food food;
+        Food food2;
         Wall wall;
         Player playerOne;
         Player playerTwo;
@@ -48,6 +49,9 @@ namespace SnakeGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Vector2 playerOneStartPosition = new Vector2((int)(GameGrid.Middle.X / 2), GameGrid.Middle.Y);
+            Vector2 playerTwoStartPosition = new Vector2((int)(GameGrid.Middle.X / 3 * 4), GameGrid.Middle.Y);
+
             Input playerOneInput = new Input
             {
                 North = Keys.Up,
@@ -56,20 +60,21 @@ namespace SnakeGame
                 West = Keys.Left
             };
 
-            playerOne = new Player(playerOneInput, Color.LimeGreen, GraphicsDevice);
+            playerOne = new Player(playerOneInput, Color.LimeGreen, GraphicsDevice, playerOneStartPosition);
             GameGrid.AddGameObject(playerOne.Snake);
 
-            //Input playerTwoInput = new Input
-            //{
-            //    North = Keys.W,
-            //    East = Keys.D,
-            //    South = Keys.S,
-            //    West = Keys.A
-            //};
+            Input playerTwoInput = new Input
+            {
+                North = Keys.W,
+                East = Keys.D,
+                South = Keys.S,
+                West = Keys.A
+            };
 
-            //playerTwo = new Player(playerTwoInput, Color.Blue, GraphicsDevice);
-            //GameGrid.AddGameObject(playerTwo.Snake);
+            playerTwo = new Player(playerTwoInput, Color.Red, GraphicsDevice, playerTwoStartPosition);
+            GameGrid.AddGameObject(playerTwo.Snake);
 
+            /*
             wall = new Wall(new WallTextureSet(GraphicsDevice, GameGrid.GridSquareSizeInPixels, Color.Gray));
             GameGrid.AddGameObject(wall);
 
@@ -83,10 +88,13 @@ namespace SnakeGame
                     }
                 }
             }
+            */
 
             FoodTexture foodTexture = new FoodTexture(GraphicsDevice, GameGrid.GridSquareSizeInPixels, Color.Gray, Color.DarkGray);
             food = new Food(GameGrid.GetRandomFreePosition(), foodTexture.Square);
             GameGrid.AddGameObject(food);
+            food2 = new Food(GameGrid.GetRandomFreePosition(), foodTexture.Square);
+            GameGrid.AddGameObject(food2);
         }
 
         /// <summary>
@@ -105,16 +113,23 @@ namespace SnakeGame
                 //DEBUG Force Snake.Eat()
                 if (Keyboard.GetState().IsKeyDown(Keys.E))
                     playerOne.Snake.Eat();
+
+                if (Keyboard.GetState().IsKeyDown(Keys.R))
+                    playerTwo.Snake.Eat();
                 //DEBUG
 
                 playerOne.UpdateInput();
+                playerTwo.UpdateInput();
 
                 if (updateCount > 5)
                 {
                     updateCount = 0;
 
                     food.Update();
+                    food2.Update();
+
                     playerOne.Update();
+                    playerTwo.Update();
                 }
 
                 updateCount += 1;
@@ -128,8 +143,11 @@ namespace SnakeGame
 
             spriteBatch.Begin();
             food.Draw(spriteBatch);
+            food2.Draw(spriteBatch);
+
             playerOne.Draw(spriteBatch);
-            wall.Draw(spriteBatch);
+            playerTwo.Draw(spriteBatch);
+            //wall.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
