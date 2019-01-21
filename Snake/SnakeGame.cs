@@ -12,6 +12,7 @@ namespace SnakeGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         int updateCount = 0;
+        GameMode gameMode = GameMode.TwoPlayer;
 
         Food food;
         Food food2;
@@ -50,8 +51,7 @@ namespace SnakeGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Vector2 playerOneStartPosition = new Vector2((int)(GameGrid.Middle.X / 2), GameGrid.Middle.Y);
-            Vector2 playerTwoStartPosition = new Vector2((int)(GameGrid.Middle.X / 3 * 4), GameGrid.Middle.Y);
-
+            
             Input playerOneInput = new Input
             {
                 North = Keys.Up,
@@ -63,16 +63,22 @@ namespace SnakeGame
             playerOne = new Player(playerOneInput, Color.LimeGreen, GraphicsDevice, playerOneStartPosition);
             GameGrid.AddGameObject(playerOne.Snake);
 
-            Input playerTwoInput = new Input
-            {
-                North = Keys.W,
-                East = Keys.D,
-                South = Keys.S,
-                West = Keys.A
-            };
 
-            playerTwo = new Player(playerTwoInput, Color.Red, GraphicsDevice, playerTwoStartPosition);
-            GameGrid.AddGameObject(playerTwo.Snake);
+            if (gameMode == GameMode.TwoPlayer)
+            {
+                Vector2 playerTwoStartPosition = new Vector2((int)(GameGrid.Middle.X / 3 * 4), GameGrid.Middle.Y);
+
+                Input playerTwoInput = new Input
+                {
+                    North = Keys.W,
+                    East = Keys.D,
+                    South = Keys.S,
+                    West = Keys.A
+                };
+
+                playerTwo = new Player(playerTwoInput, Color.Red, GraphicsDevice, playerTwoStartPosition);
+                GameGrid.AddGameObject(playerTwo.Snake);
+            }
 
             /*
             wall = new Wall(new WallTextureSet(GraphicsDevice, GameGrid.GridSquareSizeInPixels, Color.Gray));
@@ -110,17 +116,23 @@ namespace SnakeGame
         {
             if (IsActive)
             {
-                //DEBUG Force Snake.Eat()
-                if (Keyboard.GetState().IsKeyDown(Keys.E))
-                    playerOne.Snake.Eat();
+                playerOne.UpdateInput();
 
-                if (Keyboard.GetState().IsKeyDown(Keys.R))
-                    playerTwo.Snake.Eat();
+                //DEBUG Force Snake.Eat()
+                if (Keyboard.GetState().IsKeyDown(Keys.P))
+                    playerOne.Snake.Eat();
                 //DEBUG
 
-                playerOne.UpdateInput();
-                playerTwo.UpdateInput();
+                if (gameMode == GameMode.TwoPlayer)
+                {
+                    playerTwo.UpdateInput();
 
+                    //DEBUG Force Snake.Eat()
+                    if (Keyboard.GetState().IsKeyDown(Keys.O))
+                        playerTwo.Snake.Eat();
+                    //DEBUG
+                }
+                
                 if (updateCount > 5)
                 {
                     updateCount = 0;
@@ -129,7 +141,11 @@ namespace SnakeGame
                     food2.Update();
 
                     playerOne.Update();
-                    playerTwo.Update();
+
+                    if (gameMode == GameMode.TwoPlayer)
+                    {
+                        playerTwo.Update();
+                    }
                 }
 
                 updateCount += 1;
@@ -142,11 +158,16 @@ namespace SnakeGame
             GraphicsDevice.Clear(Color.LightGray);
 
             spriteBatch.Begin();
-            food.Draw(spriteBatch);
-            food2.Draw(spriteBatch);
 
             playerOne.Draw(spriteBatch);
-            playerTwo.Draw(spriteBatch);
+
+            if (gameMode == GameMode.TwoPlayer)
+            {
+                playerTwo.Draw(spriteBatch);
+            }
+
+            food.Draw(spriteBatch);
+            food2.Draw(spriteBatch);
             //wall.Draw(spriteBatch);
             spriteBatch.End();
 
