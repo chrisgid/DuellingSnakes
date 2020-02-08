@@ -1,3 +1,3 @@
-# DuellingSnakes
+# Snake Versus Snake
 
-My two player version of the classic game Snake. Work in progress made with MonoGame
+A two player version of the classic game Snake. Work in progress made with MonoGame
