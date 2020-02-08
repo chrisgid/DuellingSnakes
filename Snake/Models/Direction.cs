@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 
 namespace SnakeGame.Models
 {
@@ -18,7 +17,6 @@ namespace SnakeGame.Models
             switch (direction)
             {
                 default:
-                case Direction.North:
                     return Direction.South;
                 case Direction.East:
                     return Direction.West;
@@ -39,7 +37,6 @@ namespace SnakeGame.Models
             switch (direction)
             {
                 default:
-                case Direction.North:
                     return DirectionVector.North;
                 case Direction.East:
                     return DirectionVector.West;

@@ -13,27 +13,27 @@ namespace SnakeGame.GameObjects
         private bool _alive = true;
         private int _defaultLength = 3;
         private bool _justEaten = false;
-        private List<Vector2> _postitions = new List<Vector2>();
+        private readonly List<Vector2> _positions = new List<Vector2>();
         private Vector2 _gridDimensions = GameGrid.GridDimensions;
         private Direction _direction;
-        private SnakeTextureSet _textureSet;
+        private readonly SnakeTextureSet _textureSet;
 
         public Snake(GraphicsDevice graphicsDevice, Color color, Vector2 initialPosition, Direction initialDirection = Direction.North)
         {
             _textureSet = new SnakeTextureSet(graphicsDevice, GameGrid.GridSquareSizeInPixels, color);
-            _postitions.Add(initialPosition);
+            _positions.Add(initialPosition);
             _direction = initialDirection;
             AddDefaultTailPositions();
         }
 
-        public bool Alive { get => _alive; }
-        public Vector2 HeadPosition { get => _postitions[0]; }
-        public IList<Vector2> Positions { get => _postitions; }
-        public Direction Direction { get => _direction; }
-        public int Length { get => _postitions.Count(); }
-        public Type Type { get => typeof(Snake); }
+        public bool Alive => _alive;
+        public Vector2 HeadPosition => _positions[0];
+        public IList<Vector2> Positions => _positions;
+        public Direction Direction => _direction;
+        public int Length => _positions.Count();
+        public Type Type => typeof(Snake);
 
-        private Vector2 DirectionVector { get => Direction.ToVector2(); }
+        private Vector2 DirectionVector => Direction.ToVector2();
 
         public Snake Eat()
         {
@@ -47,12 +47,12 @@ namespace SnakeGame.GameObjects
         {
             if (Alive)
             {
-                int headPositionX = (int)HeadPosition.X + (int)DirectionVector.X;
-                int headPositionY = (int)HeadPosition.Y + (int)DirectionVector.Y;
+                var headPositionX = (int)HeadPosition.X + (int)DirectionVector.X;
+                var headPositionY = (int)HeadPosition.Y + (int)DirectionVector.Y;
 
-                Vector2 newHeadPosition = GameGrid.GetWrappedPosition(headPositionX, headPositionY);
+                var newHeadPosition = GameGrid.GetWrappedPosition(headPositionX, headPositionY);
 
-                foreach (IGameObject gameObject in GameGrid.GameObjects)
+                foreach (var gameObject in GameGrid.GameObjects)
                 {
                     if (gameObject.Positions.Contains(newHeadPosition))
                     {
@@ -78,27 +78,27 @@ namespace SnakeGame.GameObjects
                     {
                         _justEaten = false;
 
-                        if (_postitions.Contains(newHeadPosition))
+                        if (_positions.Contains(newHeadPosition))
                         {
                             Kill();
                         }
                     }
                     else
                     {
-                        if (_postitions.GetRange(0, _postitions.Count - 1).Contains(newHeadPosition))
+                        if (_positions.GetRange(0, _positions.Count - 1).Contains(newHeadPosition))
                         {
                             Kill();
                         }
                         else
                         {
-                            _postitions.RemoveAt(_postitions.Count - 1);
+                            _positions.RemoveAt(_positions.Count - 1);
                         }
                     }
                 }
 
                 if (Alive)
                 {
-                    _postitions.Insert(0, newHeadPosition);
+                    _positions.Insert(0, newHeadPosition);
                 }
             }
         }
@@ -118,12 +118,12 @@ namespace SnakeGame.GameObjects
 
         private void AddDefaultTailPositions()
         {
-            int xModifier = (int)DirectionVector.X * -1;
-            int yModifier = (int)DirectionVector.Y * -1;
+            var xModifier = (int)DirectionVector.X * -1;
+            var yModifier = (int)DirectionVector.Y * -1;
 
-            for (int i = 1; i < _defaultLength; i++)
+            for (var i = 1; i < _defaultLength; i++)
             {
-                _postitions.Add(new Vector2
+                _positions.Add(new Vector2
                 {
                     X = HeadPosition.X + (xModifier * i),
                     Y = HeadPosition.Y + (yModifier * i)
@@ -133,15 +133,13 @@ namespace SnakeGame.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            // Please don't judge
-
-            for (int i = 0; i < this.Positions.Count; i++)
+            for (var i = 0; i < Positions.Count; i++)
             {
-                Vector2 position = this.Positions[i];
+                var position = Positions[i];
 
-                if (position == this.HeadPosition || this.Positions.Count - 1 == i)
+                if (position == HeadPosition || Positions.Count - 1 == i)
                 {
-                    bool isHead = position == this.HeadPosition;
+                    var isHead = position == HeadPosition;
 
                     float rotation = 0;
                     int modifier;
@@ -150,12 +148,12 @@ namespace SnakeGame.GameObjects
                     if (isHead)
                     {
                         modifier = 0;
-                        direction = this.Direction;
+                        direction = Direction;
                     }
                     else
                     {
                         modifier = 180;
-                        direction = GameGrid.CalcDirectionBetweenAdjacent(position, this.Positions[i - 1]);
+                        direction = GameGrid.CalcDirectionBetweenAdjacent(position, Positions[i - 1]);
                     }
 
                     switch (direction)
@@ -177,44 +175,62 @@ namespace SnakeGame.GameObjects
 
                     if (isHead)
                     {
-                        Vector2 drawPosition = GameGrid.GetDrawPosition(_textureSet.Head, position);
+                        var drawPosition = GameGrid.GetDrawPosition(_textureSet.Head, position);
                         spriteBatch.Draw(_textureSet.Head, drawPosition, null, Color.White, rotation, _textureSet.Head.Bounds.Center.ToVector2(), 1, SpriteEffects.None, 0);
                     }
                     else
                     {
-                        Vector2 drawPosition = GameGrid.GetDrawPosition(_textureSet.Tail, position);
+                        var drawPosition = GameGrid.GetDrawPosition(_textureSet.Tail, position);
                         spriteBatch.Draw(_textureSet.Tail, drawPosition, null, Color.White, rotation, _textureSet.Tail.Bounds.Center.ToVector2(), 1, SpriteEffects.None, 0);
                     }
                 }
                 else
                 {
-                    Direction directionNext = GameGrid.CalcDirectionBetweenAdjacent(position, this.Positions[i - 1]);
-                    Direction directionPrev = GameGrid.CalcDirectionBetweenAdjacent(position, this.Positions[i + 1]);
+                    var directionNext = GameGrid.CalcDirectionBetweenAdjacent(position, Positions[i - 1]);
+                    var directionPrev = GameGrid.CalcDirectionBetweenAdjacent(position, Positions[i + 1]);
 
-                    float rotation = 0.0f;
+                    var rotation = 0.0f;
 
                     if (directionNext.IsOpposite(directionPrev))
                     {
-                        if (directionNext == Direction.North || directionNext == Direction.South)
-                            rotation = DegreesToRadians.Calculate(0);
-                        else if (directionNext == Direction.East || directionNext == Direction.West)
-                            rotation = DegreesToRadians.Calculate(90);
+                        switch (directionNext)
+                        {
+                            case Direction.North:
+                            case Direction.South:
+                                rotation = DegreesToRadians.Calculate(0);
+                                break;
+                            case Direction.East:
+                            case Direction.West:
+                                rotation = DegreesToRadians.Calculate(90);
+                                break;
+                        }
 
-                        Vector2 drawPosition = GameGrid.GetDrawPosition(_textureSet.MiddleStraight, position);
+                        var drawPosition = GameGrid.GetDrawPosition(_textureSet.MiddleStraight, position);
                         spriteBatch.Draw(_textureSet.MiddleStraight, drawPosition, null, Color.White, rotation, _textureSet.MiddleStraight.Bounds.Center.ToVector2(), 1, SpriteEffects.None, 0);
                     }
                     else
                     {
-                        if ((directionNext == Direction.East && directionPrev == Direction.South) || (directionNext == Direction.South && directionPrev == Direction.East))
-                            rotation = DegreesToRadians.Calculate(0);
-                        else if ((directionNext == Direction.South && directionPrev == Direction.West) || (directionNext == Direction.West && directionPrev == Direction.South))
-                            rotation = DegreesToRadians.Calculate(90);
-                        else if ((directionNext == Direction.West && directionPrev == Direction.North) || (directionNext == Direction.North && directionPrev == Direction.West))
-                            rotation = DegreesToRadians.Calculate(180);
-                        else if ((directionNext == Direction.North && directionPrev == Direction.East) || (directionNext == Direction.East && directionPrev == Direction.North))
-                            rotation = DegreesToRadians.Calculate(270);
+                        switch (directionNext)
+                        {
+                            case Direction.East when directionPrev == Direction.South:
+                            case Direction.South when directionPrev == Direction.East:
+                                rotation = DegreesToRadians.Calculate(0);
+                                break;
+                            case Direction.South when directionPrev == Direction.West:
+                            case Direction.West when directionPrev == Direction.South:
+                                rotation = DegreesToRadians.Calculate(90);
+                                break;
+                            case Direction.West when directionPrev == Direction.North:
+                            case Direction.North when directionPrev == Direction.West:
+                                rotation = DegreesToRadians.Calculate(180);
+                                break;
+                            case Direction.North when directionPrev == Direction.East:
+                            case Direction.East when directionPrev == Direction.North:
+                                rotation = DegreesToRadians.Calculate(270);
+                                break;
+                        }
 
-                        Vector2 drawPosition = GameGrid.GetDrawPosition(_textureSet.MiddleCorner, position);
+                        var drawPosition = GameGrid.GetDrawPosition(_textureSet.MiddleCorner, position);
                         spriteBatch.Draw(_textureSet.MiddleCorner, drawPosition, null, Color.White, rotation, _textureSet.MiddleCorner.Bounds.Center.ToVector2(), 1, SpriteEffects.None, 0);
                     }
                 }

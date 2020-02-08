@@ -3,17 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SnakeGame.GameObjects;
 using SnakeGame.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakeGame
 {
     public class Player
     {
-        private Direction direction;
+        private Direction _direction;
 
         public Input Input { get; }
         public Snake Snake { get; }
@@ -28,23 +23,31 @@ namespace SnakeGame
 
         public void Update()
         {
-            Snake.ChangeDirection(direction);
+            Snake.ChangeDirection(_direction);
             Snake.Update();
         }
 
         public void UpdateInput()
         {
             if (Keyboard.GetState().IsKeyDown(Input.North))
-                direction = Direction.North;
+            {
+                _direction = Direction.North;
+            }
 
             if (Keyboard.GetState().IsKeyDown(Input.East))
-                direction = Direction.East;
+            {
+                _direction = Direction.East;
+            }
 
             if (Keyboard.GetState().IsKeyDown(Input.South))
-                direction = Direction.South;
+            {
+                _direction = Direction.South;
+            }
 
             if (Keyboard.GetState().IsKeyDown(Input.West))
-                direction = Direction.West;
+            {
+                _direction = Direction.West;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

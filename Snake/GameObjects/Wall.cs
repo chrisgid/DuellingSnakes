@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SnakeGame.Textures;
 
 namespace SnakeGame.GameObjects
 {
-    class Wall : IGameObject
+    public class Wall : IGameObject
     {
-        private List<Vector2> _positions = new List<Vector2>();
-        private WallTextureSet _textureSet;
+        private readonly List<Vector2> _positions = new List<Vector2>();
+        private readonly WallTextureSet _textureSet;
 
         public Wall(WallTextureSet textureSet)
         {
@@ -32,9 +29,9 @@ namespace SnakeGame.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Vector2 wallSection in _positions)
+            foreach (var wallSection in _positions)
             {
-                Vector2 drawPosition = new Vector2
+                var drawPosition = new Vector2
                 {
                     X = wallSection.X * GameGrid.GridSquareSizeInPixels,
                     Y = wallSection.Y * GameGrid.GridSquareSizeInPixels,

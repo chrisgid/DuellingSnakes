@@ -9,20 +9,20 @@ namespace SnakeGame
 {
     public class SnakeGame : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        int updateCount = 0;
-        GameMode gameMode = GameMode.TwoPlayer;
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        private int _updateCount = 0;
+        private GameMode _gameMode = GameMode.TwoPlayer;
 
-        Food food;
-        Food food2;
-        Wall wall;
-        Player playerOne;
-        Player playerTwo;
+        private Food _food;
+        private Food _food2;
+        private Wall _wall;
+        private Player _playerOne;
+        private Player _playerTwo;
 
         public SnakeGame()
         {
-            graphics = new GraphicsDeviceManager(this)
+            _graphics = new GraphicsDeviceManager(this)
             {
                 PreferredBackBufferWidth = (int)GameGrid.SizeInPixels.X,
                 PreferredBackBufferHeight = (int)GameGrid.SizeInPixels.Y
@@ -48,11 +48,11 @@ namespace SnakeGame
         /// </summary>
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Vector2 playerOneStartPosition = new Vector2((int)(GameGrid.Middle.X / 2), GameGrid.Middle.Y);
+            var playerOneStartPosition = new Vector2((int)(GameGrid.Middle.X / 2), GameGrid.Middle.Y);
             
-            Input playerOneInput = new Input
+            var playerOneInput = new Input
             {
                 North = Keys.Up,
                 East = Keys.Right,
@@ -60,15 +60,15 @@ namespace SnakeGame
                 West = Keys.Left
             };
 
-            playerOne = new Player(playerOneInput, Color.LimeGreen, GraphicsDevice, playerOneStartPosition);
-            GameGrid.AddGameObject(playerOne.Snake);
+            _playerOne = new Player(playerOneInput, Color.LimeGreen, GraphicsDevice, playerOneStartPosition);
+            GameGrid.AddGameObject(_playerOne.Snake);
 
 
-            if (gameMode == GameMode.TwoPlayer)
+            if (_gameMode == GameMode.TwoPlayer)
             {
-                Vector2 playerTwoStartPosition = new Vector2((int)(GameGrid.Middle.X / 3 * 4), GameGrid.Middle.Y);
+                var playerTwoStartPosition = new Vector2((int)(GameGrid.Middle.X / 3 * 4), GameGrid.Middle.Y);
 
-                Input playerTwoInput = new Input
+                var playerTwoInput = new Input
                 {
                     North = Keys.W,
                     East = Keys.D,
@@ -76,8 +76,8 @@ namespace SnakeGame
                     West = Keys.A
                 };
 
-                playerTwo = new Player(playerTwoInput, Color.Red, GraphicsDevice, playerTwoStartPosition);
-                GameGrid.AddGameObject(playerTwo.Snake);
+                _playerTwo = new Player(playerTwoInput, Color.Red, GraphicsDevice, playerTwoStartPosition);
+                GameGrid.AddGameObject(_playerTwo.Snake);
             }
 
             /*
@@ -96,11 +96,11 @@ namespace SnakeGame
             }
             */
 
-            FoodTexture foodTexture = new FoodTexture(GraphicsDevice, GameGrid.GridSquareSizeInPixels, Color.Gray, Color.DarkGray);
-            food = new Food(GameGrid.GetRandomFreePosition(), foodTexture.Square);
-            GameGrid.AddGameObject(food);
-            food2 = new Food(GameGrid.GetRandomFreePosition(), foodTexture.Square);
-            GameGrid.AddGameObject(food2);
+            var foodTexture = new FoodTexture(GraphicsDevice, GameGrid.GridSquareSizeInPixels, Color.Gray, Color.DarkGray);
+            _food = new Food(GameGrid.GetRandomFreePosition(), foodTexture.Square);
+            GameGrid.AddGameObject(_food);
+            _food2 = new Food(GameGrid.GetRandomFreePosition(), foodTexture.Square);
+            GameGrid.AddGameObject(_food2);
         }
 
         /// <summary>
@@ -114,62 +114,64 @@ namespace SnakeGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (IsActive)
+            if (!IsActive)
             {
-                playerOne.UpdateInput();
+                return;
+            }
+
+            _playerOne.UpdateInput();
+
+            //DEBUG Force Snake.Eat()
+            if (Keyboard.GetState().IsKeyDown(Keys.P))
+                _playerOne.Snake.Eat();
+            //DEBUG
+
+            if (_gameMode == GameMode.TwoPlayer)
+            {
+                _playerTwo.UpdateInput();
 
                 //DEBUG Force Snake.Eat()
-                if (Keyboard.GetState().IsKeyDown(Keys.P))
-                    playerOne.Snake.Eat();
+                if (Keyboard.GetState().IsKeyDown(Keys.O))
+                    _playerTwo.Snake.Eat();
                 //DEBUG
-
-                if (gameMode == GameMode.TwoPlayer)
-                {
-                    playerTwo.UpdateInput();
-
-                    //DEBUG Force Snake.Eat()
-                    if (Keyboard.GetState().IsKeyDown(Keys.O))
-                        playerTwo.Snake.Eat();
-                    //DEBUG
-                }
-                
-                if (updateCount > 5)
-                {
-                    updateCount = 0;
-
-                    food.Update();
-                    food2.Update();
-
-                    playerOne.Update();
-
-                    if (gameMode == GameMode.TwoPlayer)
-                    {
-                        playerTwo.Update();
-                    }
-                }
-
-                updateCount += 1;
-                base.Update(gameTime);
             }
+                
+            if (_updateCount > 5)
+            {
+                _updateCount = 0;
+
+                _food.Update();
+                _food2.Update();
+
+                _playerOne.Update();
+
+                if (_gameMode == GameMode.TwoPlayer)
+                {
+                    _playerTwo.Update();
+                }
+            }
+
+            _updateCount += 1;
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightGray);
 
-            spriteBatch.Begin();
+            _spriteBatch.Begin();
 
-            playerOne.Draw(spriteBatch);
+            _playerOne.Draw(_spriteBatch);
 
-            if (gameMode == GameMode.TwoPlayer)
+            if (_gameMode == GameMode.TwoPlayer)
             {
-                playerTwo.Draw(spriteBatch);
+                _playerTwo.Draw(_spriteBatch);
             }
 
-            food.Draw(spriteBatch);
-            food2.Draw(spriteBatch);
+            _food.Draw(_spriteBatch);
+            _food2.Draw(_spriteBatch);
             //wall.Draw(spriteBatch);
-            spriteBatch.End();
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
