@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SnakeGame
+namespace SnakeVersusSnake
 {
     internal static class DegreesToRadians
     {

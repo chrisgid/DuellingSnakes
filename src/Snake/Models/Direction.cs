@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace SnakeGame.Models
+namespace SnakeVersusSnake.Models
 {
     public enum Direction
     {

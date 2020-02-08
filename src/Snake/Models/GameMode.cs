@@ -1,4 +1,4 @@
-﻿namespace SnakeGame.Models
+﻿namespace SnakeVersusSnake.Models
 {
     public enum GameMode
     {

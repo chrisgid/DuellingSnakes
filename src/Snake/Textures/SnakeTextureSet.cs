@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SnakeGame.Textures
+namespace SnakeVersusSnake.Textures
 {
     public class SnakeTextureSet
     {

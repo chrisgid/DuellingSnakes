@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
-namespace SnakeGame.GameObjects
+namespace SnakeVersusSnake.GameObjects
 {
     public interface IGameObject
     {

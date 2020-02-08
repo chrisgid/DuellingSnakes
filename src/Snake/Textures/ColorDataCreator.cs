@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
-namespace SnakeGame.Textures
+namespace SnakeVersusSnake.Textures
 {
     public static class ColorDataCreator
     {

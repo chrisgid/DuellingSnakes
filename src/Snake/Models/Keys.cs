@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace SnakeGame.Models
+namespace SnakeVersusSnake.Models
 {
     public struct Input
     {

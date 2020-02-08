@@ -9,8 +9,8 @@
     <ProjectGuid>{CC8A543D-3ABE-406B-8655-44ED88A5B2F0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SnakeGame</RootNamespace>
-    <AssemblyName>Snake</AssemblyName>
+    <RootNamespace>SnakeVersusSnake</RootNamespace>
+    <AssemblyName>SnakeVersusSnake</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>

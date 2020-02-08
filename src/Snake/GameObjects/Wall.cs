@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SnakeGame.Textures;
+using SnakeVersusSnake.Textures;
 
-namespace SnakeGame.GameObjects
+namespace SnakeVersusSnake.GameObjects
 {
     public class Wall : IGameObject
     {

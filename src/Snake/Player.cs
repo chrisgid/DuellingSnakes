@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SnakeGame.GameObjects;
-using SnakeGame.Models;
+using SnakeVersusSnake.GameObjects;
+using SnakeVersusSnake.Models;
 
-namespace SnakeGame
+namespace SnakeVersusSnake
 {
     public class Player
     {
